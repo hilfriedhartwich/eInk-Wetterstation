@@ -1,234 +1,66 @@
-"""
-eInk-Wetterstation
-Copyright 2021, K.N.
-https://github.com/hilfriedhartwich/eInk-Wetterstation/
+# eInk-Wetterstation
+OpenWeatherMap Daten via Raspberry Pi Zero auf ein E-Ink Display
 
-GNU/GPL v3
-Stand: 20.05.2021
-"""
+Ziel dieses Bastelprojektes war es, ein kleines Display zu bauen, das immer die aktuelle Zeit in Worten sowie die Wettervorhersage anzeigt. Das ganze sollte zudem ohne Löten oder andere Hardwarebasteleien umsetzbar sein.
 
-import time
-import requests
-from datetime import datetime
-import os
-import digitalio
-import busio
-import board
-from adafruit_epd.epd import Adafruit_EPD
-from adafruit_epd.il0373 import Adafruit_IL0373
-from adafruit_epd.il91874 import Adafruit_IL91874  # pylint: disable=unused-import
-from adafruit_epd.il0398 import Adafruit_IL0398  # pylint: disable=unused-import
-from adafruit_epd.ssd1608 import Adafruit_SSD1608  # pylint: disable=unused-import
-from adafruit_epd.ssd1675 import Adafruit_SSD1675  # pylint: disable=unused-import
-from adafruit_epd.ssd1680 import Adafruit_SSD1680  # pylint: disable=unused-import
-from adafruit_epd.ssd1681 import Adafruit_SSD1681  # pylint: disable=unused-import
+![Frontansicht](frontansicht.jpg)
 
+# Verwendete Hardware
+Für das Projekt wurde folgende Hardware für ungefähr 50€ verwendet:
+- [Adafruit 2.13" Monochrome E-Ink Bonnet for Raspberry Pi - THINK INK](https://www.adafruit.com/product/4687) (circa 20€)
+- [Raspberry Pi Zero WH](https://www.adafruit.com/product/3708) (circa 15€)
+- Micro SD Speicherkarte mit mindestens 16GB (circa 5€)
+- []Passendes Micro USB Netzteil](https://www.raspberrypi.org/products/raspberry-pi-universal-power-supply/) (circa 10€)
 
-# Rahmendaten
-api_key = "heirmusseinapikeystehen" # Hier den OpenWeatherMap API-Key eintragen
-city_name = "Berlin" # Hier den Namen der gewünschten Stadt eintragen
+# Installation
+## Vorbereitung Raspberry Pi
+- Im [Raspberry Pi Imager](https://www.raspberrypi.org/software/) über "Strg + Umschalt + X" zunächst SSH aktivieren und dann auf der SD-Karte ein Rasperry Pi OS Lite ohne grafische Oberfläche installieren
+- Das Display auf den Raspberry aufstecken, SD-Karte einlegen und das ganze mit dem Netzteil an den Strom hängen
 
+## Installation benötigter Software
+- Im eigenen Router die IP-Adresse des neuen Gerätes herausfinden
+- Via SSH in einem Terminal auf dem Raspberry einloggen 'ssh pi@IP-ADRESSE'
+- Updates installieren 'sudo apt update && sudo apt upgrade' 
+- 'sudo apt-get install python3-pip'
+- 'sudo pip3 install adafruit-circuitpython-epd'
+- 'sudo apt-get install ttf-dejavu'
+- 'sudo apt-get install python3-pil'
+- Mit 'exit' die Verbindung wieder trennen
 
-# Zeitumrechner
-def UNIX2TTMMJJHHMM(rohzeit):
-    zeitangabe = time.strftime("%d.%m.%Y, %H:%M", time.localtime(rohzeit)) + ' Uhr'
-    return zeitangabe
+## Anpassen des Python-Scripts
+- Die Datei "WetterAppeInk.py" von dieser Seite herunterladen
+- Auf [OpenWeatherMap ein neues Konto erstellen](https://home.openweathermap.org/users/sign_up) und dann dort im BenutzerKonto unter "My API Keys" einen neuen kostenlosen Key erstellen
+- Mit einem Texteditor die Datei "WetterAppeInk.py" öffnen und ganz oben im Quelltext unter "Rahmendaten" den eigenen API-Key sowie den Namen der gewünschten Stadt angeben.
 
-def UNIX2HHMM(rohzeit):
-    zeitangabe = time.strftime("%H:%M", time.localtime(rohzeit))
-    return zeitangabe
+## Start des Skripts
+- Die angepasste Datei "WetterAppeInk.py" via SSH auf den Raspberry Pi kopieren, z.B. mit 'scp /Pfad/zur/Date/WetterAppeInk.py pi@IP-ADRESSE:/home/pi/'
+- Via SSh mit dem Raspberry Pi verbinden
+- Das Skript mit 'nohub python3 WetterAppeInk.py &' starten, mehrmals bestätigen und dann mit 'exit' die SSH Verbindung wieder trennen.
 
-# Zeit in Worten
-utabelle = {
-    1: 'eins', 13: 'eins',
-    2: 'zwei', 14: 'zwei',
-    3: 'drei', 15: 'drei',
-    4: 'vier', 16: 'vier',
-    5: 'fuenf', 17: 'fuenf',
-    6: 'sechs', 18: 'sechs',
-    7: 'sieben', 19: 'sieben',
-    8: 'acht', 20: 'acht',
-    9: 'neun', 21: 'neun',
-    10: 'zehn', 22: 'zehn',
-    11: 'elf', 23: 'elf',
-    12: 'zwoelf', 24: 'zwoelf', 0: "zwoelf"
-    }
+## Fertig
+Jetzt müsste das Skript automatisch laufen. Falls es nicht funktioniert, einfach nochmal via SSH auf das Gerät schalten und das Skript mit 'python3 WetterAppeInk.py' starten. Dann sieht man direkt, welche Fehlermeldung das Gerät ausspuckt.
 
-def zeitinworten(zeitstempel):
-    
-    minute = int(time.strftime("%M", time.localtime(zeitstempel)))
-    stunde = int(time.strftime("%H", time.localtime(zeitstempel)))
+Das Skript aktualisiert die Anzeige nach knapp drei Minuten. Das kann aber in der letzten Zeile des Quelltextes angepasst werden.
 
-    # Ganze Stunde 1/2
-    if minute < 8:
-        if stunde == 1:
-            uhrzeit = 'ein Uhr'
-        elif stunde == 24:
-            uhrzeit = 'Mitternacht'
-        else:
-            uhrzeit = f'{utabelle[stunde]} Uhr'
-
-    else:
-        # Stunde anpassen
-        stunde += 1
-
-        if stunde > 24:
-            stunde -= 24       
-
-        # Ganze Stunde 2/2
-        if minute >= 53:
-            if stunde == 1:
-                uhrzeit = 'ein Uhr'
-            elif stunde == 24:
-                uhrzeit = 'Mitternacht'
-            else:
-                uhrzeit = f'{utabelle[stunde]} Uhr'
-
-        # viertel
-        elif minute >= 8 and minute < 23:
-            uhrzeit = f'viertel {utabelle[stunde]}'
-
-        # halb
-        elif minute >= 23 and minute < 38:
-             uhrzeit = f'halb {utabelle[stunde]}'
-
-        # dreiviertel
-        elif minute >= 38 and minute < 53:
-            uhrzeit = f'dreiviertel {utabelle[stunde]}'
-
-    return uhrzeit
+# Sonstiges
+- Dieses Script basiert auf den Projekten [Raspberry Pi E-Ink Weather Station using Python] (https://learn.adafruit.com/raspberry-pi-e-ink-weather-station-using-python) von [M. LeBlanc-Williams](https://learn.adafruit.com/users/MakerMelissa) sowie [Adafruit 2.13" Monochrome E-Ink Bonnet for Raspberry Pi](https://learn.adafruit.com/2-13-in-e-ink-bonnet) von [Kattni Rembor](https://learn.adafruit.com/users/kattni)
+- Alternativ zu dem Start des Scripts via SSH kann dieses natürlich auch einfach in den Autostart integriert werden, so dass dieses nach jedem Neustart automatisch startet
 
 
-def wetter():
-    #Datenabruf
-    url = f'https://api.openweathermap.org/data/2.5/forecast?q={city_name}&units=metric&appid={api_key}&lang=de'
-    res = requests.get(url)
-    data = res.json()
+Zum Schluss hier noch ein Bild von der Seite, wie das dann am Ende aussehen könnte:
 
-    # Abgerufene Rohdaten anzeigen
-    #from pprint import pprint
-    #pprint(data)
+![Seitenansicht](seitenansicht.jpg) 
+
+Wem das nicht gefällt, der kann sich natürlich ein Gehäuse basteln.
 
 
-    # Display leeren
-    #os.system('clear')
+# Freie Software
+eInk-Wetterstation ist freie Software. Frei bezieht sich übrigens auf Freiheit, nicht (nur) auf den Preis.
 
-    # Sonnenaufgang
-    sunrise = int(data['city']['sunrise'])
+Freie Software garantiert Ihnen die die vier grundlegenden Freiheiten, diese Software zu `verwenden`, zu `verstehen`, zu `verbreiten` und zu `verbessern`.
 
-    # Sonnenuntergang
-    sunset = int(data['city']['sunset'])
+Mehr Infos zu freier Software finden Sie [hier](https://fsfe.org/freesoftware/freesoftware.de.html).
 
-    # Orstangaben
-    ortsname = data['city']['name']
-    ortsid = data['city']['id']
+Sie können dieses Projekt also unter den Bedingungen der von der Free Software Foundation veröffentlichten GNU General Public License (Version 3 der Lizenz) weiter verteilen und/oder modifizieren. 
 
-    # Ausgabe Heute
-    datum = datetime.now().strftime('%d.%m.%Y')
-    statuszeile = f'Es ist {zeitinworten(time.time())} am {datum}'
-    
-
-    #MiniMax Zukunft
-    mintemp = 100
-    maxtemp = -100
-    maxzeit = 0
-    maxwind = 0
-
-    for x in range(len(data['list'])):
-        maxzeit = data['list'][x]['dt']
-
-        if round(data['list'][x]['main']['temp']) > maxtemp:
-            maxtemp = round(data['list'][x]['main']['temp'])
-
-        if round(data['list'][x]['main']['temp']) < mintemp:
-            mintemp = round(data['list'][x]['main']['temp'])
-
-        if round(data['list'][x]['wind']['speed']) > maxwind:
-            maxwind = round(data['list'][x]['wind']['speed'])
-
-    # Berechnung Zeitraum der Prognose
-    jetzt = time.time()
-    zeitraum_sekunden = maxzeit - jetzt
-    zeitraum = round(zeitraum_sekunden / 60 / 60 / 24) # Umrechnung von Sekunden in Tage
-
-
-    # Vorhersage
-    vorhersage_header = f'Wettervorhersage {ortsname}:'
-
-    vorhersage = ''
-    for x in range(8):
-    
-        # Zeitpunkt
-        zeitpunkt = UNIX2HHMM(data['list'][x]['dt'])
-
-        # Temperatur
-        temperatur = round(data['list'][x]['main']['temp'])
-
-        # Beschreibung
-        inworten_roh = data['list'][x]['weather'][0]['description'].lower()
-        inworten = ''
-        for buchstabe in inworten_roh:
-            if buchstabe == 'ä':
-                inworten += 'ae'
-            elif buchstabe == 'ö':
-                inworten += 'oe'
-            elif buchstabe == 'ü':
-                inworten += 'ue'
-            elif buchstabe == 'ß':
-                inworten += 'ss'                
-            else:
-                inworten += buchstabe                
-
-        # Windgeschwindigkeit
-        wind = round(data['list'][x]['wind']['speed'])
-
-        # Ausgabe
-        vorhersage += f'{zeitpunkt} {temperatur:>2.0f}C {wind:>2.0f}km/h {inworten}\n'
-    
-
-    # Ausgabe
-    vorhersage_weit = f'{zeitraum} Tage: {mintemp}C bis {maxtemp}C, max. {maxwind}km/h'
-    tageslicht = f'Hell von {zeitinworten(sunrise)} bis {zeitinworten(sunset)}'
-
-    wettervorhersage = f'{statuszeile}\n\n{vorhersage_header}\n{vorhersage}\n{vorhersage_weit}\n{tageslicht}'
-    return wettervorhersage
-    
-
-
-################################
-#      Ab hier Anzeige         #
-################################
-
-
-spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
-ecs = digitalio.DigitalInOut(board.CE0)
-dc = digitalio.DigitalInOut(board.D22)
-rst = digitalio.DigitalInOut(board.D27)
-busy = digitalio.DigitalInOut(board.D17)
-
-# give them all to our drivers
-print("Creating display")
-display = Adafruit_SSD1675(122, 250,        # 2.13" HD mono display
-    spi,
-    cs_pin=ecs,
-    dc_pin=dc,
-    sramcs_pin=None,
-    rst_pin=rst,
-    busy_pin=busy,
-)
-
-display.rotation = 3
-
-while True:
-    # clear the buffer
-    print("Clear buffer")
-    display.fill(Adafruit_EPD.WHITE)
-    display.pixel(10, 100, Adafruit_EPD.BLACK)
-
-    wettervorhersage = wetter()
-    print("Draw text")
-    display.text(f'{wettervorhersage}', 5, 5, Adafruit_EPD.BLACK)
-    display.display()        
-        
-    print('Warten, biis zur nächsten Runde')
-    time.sleep(200) # Zeit in Sekunden bis zur nächsten Aktualisierung
+Dieses Projekt wird in der Hoffnung bereitgestellt, dass es nützlich sein wird, jedoch OHNE JEDE GEWÄHR, sogar ohne die implizite Gewähr der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public License für weitere Einzelheiten. Eine Kopie der GNU General Public License finden Sie [hier](https://www.gnu.org/licenses/licenses.de.html).
