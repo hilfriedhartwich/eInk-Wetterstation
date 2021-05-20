@@ -27,7 +27,11 @@ Jetzt müssen wir noch schnell alles updaten und benötigte Programme installier
 - `sudo apt-get install ttf-dejavu`
 - `sudo apt-get install python3-pil`
 
-Jetzt können wir mit `exit` die Verbindung wieder trennen.
+Des Weiteren müssen wir die serielle Schnittstelle wie folgt aktivieren:
+- `sudo raspi-config`
+- "Interfacing Options" -> SPI -> "Yes"
+
+Jetzt können wir mit `sudo reboot` die Verbindung wieder trennen.
 
 ## Anpassen des Python-Scripts
 - Die Datei "WetterAppeInk.py" von dieser Seite herunterladen
@@ -45,9 +49,10 @@ Jetzt müsste das Skript automatisch laufen. Falls es nicht funktioniert, einfac
 Das Skript aktualisiert die Anzeige nach knapp drei Minuten. Das kann aber in der letzten Zeile des Quelltextes angepasst werden.
 
 # Sonstiges
-- Dieses Script basiert auf den Projekten [Raspberry Pi E-Ink Weather Station using Python](https://learn.adafruit.com/raspberry-pi-e-ink-weather-station-using-python) von [M. LeBlanc-Williams](https://learn.adafruit.com/users/MakerMelissa) sowie [Adafruit 2.13" Monochrome E-Ink Bonnet for Raspberry Pi](https://learn.adafruit.com/2-13-in-e-ink-bonnet) von [Kattni Rembor](https://learn.adafruit.com/users/kattni)
+- Dieses Script basiert auf den Projekten [Raspberry Pi E-Ink Weather Station using Python](https://learn.adafruit.com/raspberry-pi-e-ink-weather-station-using-python) von [M. LeBlanc-Williams](https://learn.adafruit.com/users/MakerMelissa) und [Adafruit 2.13" Monochrome E-Ink Bonnet for Raspberry Pi](https://learn.adafruit.com/2-13-in-e-ink-bonnet) von [Kattni Rembor](https://learn.adafruit.com/users/kattni) sowie auf dem BeispielCode aus dem Repository [Adafruit_CircuitPython_EPD](https://github.com/adafruit/Adafruit_CircuitPython_EPD) von Adafruit
 - Alternativ zu dem Start des Scripts via SSH kann dieses natürlich auch einfach in den Autostart integriert werden, so dass dieses nach jedem Neustart automatisch startet
 - Die Datei "font5x8.bin" wird zur Darstellung der Schriften benötigt. Ich habe sie von [hier](https://github.com/adafruit/Adafruit_CircuitPython_framebuf/raw/master/examples/font5x8.bin).
+- Wer die Anzeige um 180° drehen möchte, ändert im Quelltext in der Zeile "display.rotation = 3" einfach auf den Wert "1"
 
 
 Zum Schluss hier noch ein Bild von der Seite, wie das dann am Ende aussehen könnte:
