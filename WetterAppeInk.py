@@ -38,6 +38,27 @@ def UNIX2HHMM(rohzeit):
     zeitangabe = time.strftime("%H:%M", time.localtime(rohzeit))
     return zeitangabe
 
+# Umlaute entfernen
+def wegmitdenumlauten(inputstring):
+
+    inputstring = inputstring.lower()
+    
+    outputstring = ''
+    
+    for buchstabe in inputstring:
+        if buchstabe == 'ä':
+            outputstring += 'ae'
+        elif buchstabe == 'ö':
+            outputstring += 'oe'
+        elif buchstabe == 'ü':
+            outputstring += 'ue'
+        elif buchstabe == 'ß':
+            outputstring += 'ss'                
+        else:
+            outputstring += buchstabe
+
+    return outputstring
+
 # Zeit in Worten
 utabelle = {
     1: 'eins', 13: 'eins',
@@ -153,7 +174,7 @@ def wetter():
 
 
     # Vorhersage
-    vorhersage_header = f'Wettervorhersage {ortsname}:'
+    vorhersage_header = f'Wettervorhersage {wegmitdenumlauten(ortsname)}:'
 
     vorhersage = ''
     for x in range(8):
@@ -166,18 +187,7 @@ def wetter():
 
         # Beschreibung
         inworten_roh = data['list'][x]['weather'][0]['description'].lower()
-        inworten = ''
-        for buchstabe in inworten_roh:
-            if buchstabe == 'ä':
-                inworten += 'ae'
-            elif buchstabe == 'ö':
-                inworten += 'oe'
-            elif buchstabe == 'ü':
-                inworten += 'ue'
-            elif buchstabe == 'ß':
-                inworten += 'ss'                
-            else:
-                inworten += buchstabe                
+        inworten = wegmitdenumlauten(inworten_roh)       
 
         # Windgeschwindigkeit
         wind = round(data['list'][x]['wind']['speed'])
