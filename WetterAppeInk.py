@@ -4,7 +4,7 @@ Copyright 2021, K.N.
 https://github.com/hilfriedhartwich/eInk-Wetterstation/
 
 GNU/GPL v3
-Stand: 20.05.2021
+Stand: 22.05.2021
 """
 
 import time
@@ -83,11 +83,11 @@ def zeitinworten(zeitstempel):
     # Ganze Stunde 1/2
     if minute < 8:
         if stunde == 1:
-            uhrzeit = 'ein Uhr'
+            uhrzeit = 'ein uhr'
         elif stunde == 24:
-            uhrzeit = 'Mitternacht'
+            uhrzeit = 'mitternacht'
         else:
-            uhrzeit = f'{utabelle[stunde]} Uhr'
+            uhrzeit = f'{utabelle[stunde]} uhr'
 
     else:
         # Stunde anpassen
@@ -99,11 +99,11 @@ def zeitinworten(zeitstempel):
         # Ganze Stunde 2/2
         if minute >= 53:
             if stunde == 1:
-                uhrzeit = 'ein Uhr'
+                uhrzeit = 'ein uhr'
             elif stunde == 24:
-                uhrzeit = 'Mitternacht'
+                uhrzeit = 'mitternacht'
             else:
-                uhrzeit = f'{utabelle[stunde]} Uhr'
+                uhrzeit = f'{utabelle[stunde]} uhr'
 
         # viertel
         elif minute >= 8 and minute < 23:
@@ -146,7 +146,7 @@ def wetter():
 
     # Ausgabe Heute
     datum = datetime.now().strftime('%d.%m.%Y')
-    statuszeile = f'Es ist {zeitinworten(time.time())} am {datum}'
+    statuszeile = f'es ist {zeitinworten(time.time())} am {datum}'
     
 
     #MiniMax Zukunft
@@ -174,7 +174,7 @@ def wetter():
 
 
     # Vorhersage
-    vorhersage_header = f'Wettervorhersage {wegmitdenumlauten(ortsname)}:'
+    vorhersage_header = f'wettervorhersage fuer {wegmitdenumlauten(ortsname)}:'
 
     vorhersage = ''
     for x in range(8):
@@ -197,8 +197,8 @@ def wetter():
     
 
     # Ausgabe
-    vorhersage_weit = f'{zeitraum} Tage: {mintemp}C bis {maxtemp}C, max. {maxwind}km/h'
-    tageslicht = f'Hell von {zeitinworten(sunrise)} bis {zeitinworten(sunset)}'
+    vorhersage_weit = f'{zeitraum} tage: {mintemp}C bis {maxtemp}C, max. {maxwind}km/h'
+    tageslicht = f'hell von {zeitinworten(sunrise)} bis {zeitinworten(sunset)}'
 
     wettervorhersage = f'{statuszeile}\n\n{vorhersage_header}\n{vorhersage}\n{vorhersage_weit}\n{tageslicht}'
     return wettervorhersage
@@ -216,9 +216,8 @@ dc = digitalio.DigitalInOut(board.D22)
 rst = digitalio.DigitalInOut(board.D27)
 busy = digitalio.DigitalInOut(board.D17)
 
-# give them all to our drivers
 print("Creating display")
-display = Adafruit_SSD1675(122, 250,        # 2.13" HD mono display
+display = Adafruit_SSD1675(122, 250,        # 2.13" HD Adafruit mono display
     spi,
     cs_pin=ecs,
     dc_pin=dc,
