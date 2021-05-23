@@ -49,17 +49,19 @@ Jetzt müsste das Skript automatisch laufen. Falls es nicht funktioniert, einfac
 Das Skript aktualisiert die Anzeige nach knapp drei Minuten. Das kann aber in der letzten Zeile des Quelltextes angepasst werden.
 
 # Sonstiges
-- Dieses Script basiert auf den Projekten [Raspberry Pi E-Ink Weather Station using Python](https://learn.adafruit.com/raspberry-pi-e-ink-weather-station-using-python) von [M. LeBlanc-Williams](https://learn.adafruit.com/users/MakerMelissa) und [Adafruit 2.13" Monochrome E-Ink Bonnet for Raspberry Pi](https://learn.adafruit.com/2-13-in-e-ink-bonnet) von [Kattni Rembor](https://learn.adafruit.com/users/kattni) sowie auf dem BeispielCode aus dem Repository [Adafruit_CircuitPython_EPD](https://github.com/adafruit/Adafruit_CircuitPython_EPD) von Adafruit
-- Alternativ zu dem Start des Scripts via SSH kann dieses natürlich auch einfach in den Autostart integriert werden, so dass dieses nach jedem Neustart automatisch startet
-- Die Datei "font5x8.bin" wird zur Darstellung der Schriften benötigt. Ich habe sie von [hier](https://github.com/adafruit/Adafruit_CircuitPython_framebuf/raw/master/examples/font5x8.bin).
-- Wer die Anzeige um 180° drehen möchte, ändert im Quelltext in der Zeile "display.rotation = 3" einfach auf den Wert "1"
+Dieses Script basiert auf den Projekten [Raspberry Pi E-Ink Weather Station using Python](https://learn.adafruit.com/raspberry-pi-e-ink-weather-station-using-python) von [M. LeBlanc-Williams](https://learn.adafruit.com/users/MakerMelissa) und [Adafruit 2.13" Monochrome E-Ink Bonnet for Raspberry Pi](https://learn.adafruit.com/2-13-in-e-ink-bonnet) von [Kattni Rembor](https://learn.adafruit.com/users/kattni) sowie auf dem BeispielCode aus dem Repository [Adafruit_CircuitPython_EPD](https://github.com/adafruit/Adafruit_CircuitPython_EPD) von Adafruit.
 
+Alternativ zu dem Start des Scripts via SSH kann dieses natürlich auch einfach in den Autostart integriert werden, so dass dieses nach jedem Neustart automatisch startet.
+
+Die Datei "font5x8.bin" wird zur Darstellung der Schriften benötigt. Ich habe sie von [hier](https://github.com/adafruit/Adafruit_CircuitPython_framebuf/raw/master/examples/font5x8.bin).
+
+Wer die Anzeige um 180° drehen möchte, ändert im Quelltext in der Zeile "display.rotation = 3" einfach auf den Wert "1".
 
 Zum Schluss hier noch ein Bild von der Seite, wie das dann am Ende aussehen könnte:
 
 ![Seitenansicht](seitenansicht.jpg) 
 
-Wem das nicht gefällt, der kann sich natürlich ein Gehäuse basteln.
+Wem das nicht gefällt, der kann sich natürlich ein Gehäuse oder einen Ständer basteln. Einfacher Vorlagen für den 3D-Drucker gibt es zum Beispiel [hier](https://www.thingiverse.com/thing:1344095)oder [hier](https://www.thingiverse.com/thing:3538700).
 
 
 # Freie Software
