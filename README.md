@@ -57,17 +57,21 @@ Die Datei "font5x8.bin" wird zur Darstellung der Schriften benötigt. Ich habe s
 
 Wer die Anzeige um 180° drehen möchte, ändert im Quelltext in der Zeile "display.rotation = 3" einfach auf den Wert "1".
 
+Wer ein anderes eInk-Display verwendet, findet im Quelltext bereits die passenden Zeilen als Kommentar. Einfach die hier verwendeten Zeilen durch die für das verwendete Display benötigten Befehle ersetzen.
+
 Zum Schluss hier noch ein Bild von der Seite, wie das dann am Ende aussehen könnte:
 
 ![Seitenansicht](seitenansicht.jpg) 
 
-Wem das nicht gefällt, der kann sich natürlich ein Gehäuse oder einen Ständer basteln. Einfacher Vorlagen für den 3D-Drucker gibt es zum Beispiel [hier](https://www.thingiverse.com/thing:1344095)oder [hier](https://www.thingiverse.com/thing:3538700).
+Wem das nicht gefällt, der kann sich natürlich ein Gehäuse oder einen Ständer basteln. Einfacher Vorlagen für den 3D-Drucker gibt es zum Beispiel [hier](https://www.thingiverse.com/thing:1344095) oder [hier](https://www.thingiverse.com/thing:3538700).
+
+Sie finden dieses Repository übrigens sowohl auf [GitHub](https://github.com/hilfriedhartwich/eInk-Wetterstation) als auch auf [Codeberg](https://codeberg.org/hilfriedhartwich/eInk-Wetterstation).
 
 
 # Freie Software
 eInk-Wetterstation ist freie Software. Frei bezieht sich übrigens auf Freiheit, nicht (nur) auf den Preis.
 
-Freie Software garantiert Ihnen die die vier grundlegenden Freiheiten, diese Software zu `verwenden`, zu `verstehen`, zu `verbreiten` und zu `verbessern`.
+Freie Software garantiert Ihnen die die vier grundlegenden Freiheiten, diese Software zu **verwenden**, zu **verstehen**, zu **verbreiten** und zu **verbessern**.
 
 Mehr Infos zu freier Software finden Sie [hier](https://fsfe.org/freesoftware/freesoftware.de.html).
 
