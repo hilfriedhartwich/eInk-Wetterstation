@@ -1,10 +1,11 @@
 """
 eInk-Wetterstation
 Copyright 2021, K.N.
-https://github.com/hilfriedhartwich/eInk-Wetterstation/
+https://github.com/hilfriedhartwich/eInk-Wetterstation
+https://codeberg.org/hilfriedhartwich/eInk-Wetterstation
 
 GNU/GPL v3
-Stand: 22.05.2021
+Stand: 25.05.2021
 """
 
 import time
@@ -15,28 +16,18 @@ import digitalio
 import busio
 import board
 from adafruit_epd.epd import Adafruit_EPD
-from adafruit_epd.il0373 import Adafruit_IL0373
-from adafruit_epd.il91874 import Adafruit_IL91874  # pylint: disable=unused-import
-from adafruit_epd.il0398 import Adafruit_IL0398  # pylint: disable=unused-import
-from adafruit_epd.ssd1608 import Adafruit_SSD1608  # pylint: disable=unused-import
-from adafruit_epd.ssd1675 import Adafruit_SSD1675  # pylint: disable=unused-import
-from adafruit_epd.ssd1680 import Adafruit_SSD1680  # pylint: disable=unused-import
-from adafruit_epd.ssd1681 import Adafruit_SSD1681  # pylint: disable=unused-import
+
 
 
 # Rahmendaten
 api_key = "heirmusseinapikeystehen" # Hier den OpenWeatherMap API-Key eintragen
-city_name = "Berlin" # Hier den Namen der gewünschten Stadt eintragen
+city_name = "Brieselang" # Hier den Namen der gewünschten Stadt eintragen
 
 
 # Zeitumrechner
-def UNIX2TTMMJJHHMM(rohzeit):
-    zeitangabe = time.strftime("%d.%m.%Y, %H:%M", time.localtime(rohzeit)) + ' Uhr'
-    return zeitangabe
-
 def UNIX2HHMM(rohzeit):
-    zeitangabe = time.strftime("%H:%M", time.localtime(rohzeit))
-    return zeitangabe
+    zeitangabe = time.strftime("%H", time.localtime(rohzeit))
+    return f'{zeitangabe} Uhr'
 
 # Umlaute entfernen
 def wegmitdenumlauten(inputstring):
@@ -174,7 +165,7 @@ def wetter():
 
 
     # Vorhersage
-    vorhersage_header = f'wettervorhersage fuer {wegmitdenumlauten(ortsname)}:'
+    vorhersage_header = f'wettervorhersage {wegmitdenumlauten(ortsname)}:'
 
     vorhersage = ''
     for x in range(8):
@@ -217,6 +208,9 @@ rst = digitalio.DigitalInOut(board.D27)
 busy = digitalio.DigitalInOut(board.D17)
 
 print("Creating display")
+
+from adafruit_epd.ssd1675 import Adafruit_SSD1675  # pylint: disable=unused-import
+
 display = Adafruit_SSD1675(122, 250,        # 2.13" HD Adafruit mono display
     spi,
     cs_pin=ecs,
@@ -225,6 +219,33 @@ display = Adafruit_SSD1675(122, 250,        # 2.13" HD Adafruit mono display
     rst_pin=rst,
     busy_pin=busy,
 )
+
+'''
+Falls ein anderes Display verwendet werden soll, hier die passenden Angaben
+
+from adafruit_epd.il0373 import Adafruit_IL0373
+from adafruit_epd.il91874 import Adafruit_IL91874
+from adafruit_epd.il0398 import Adafruit_IL0398
+from adafruit_epd.ssd1608 import Adafruit_SSD1608
+from adafruit_epd.ssd1675 import Adafruit_SSD1675
+
+#display = Adafruit_SSD1608(200, 200,        # 1.54" HD mono display
+#display = Adafruit_SSD1675(122, 250,        # 2.13" HD mono display
+#display = Adafruit_IL91874(176, 264,        # 2.7" Tri-color display
+#display = Adafruit_IL0373(152, 152,         # 1.54" Tri-color display
+#display = Adafruit_IL0373(128, 296,         # 2.9" Tri-color display
+#display = Adafruit_IL0398(400, 300,         # 4.2" Tri-color display
+display = Adafruit_IL0373(
+    104,
+    212,  # 2.13" Tri-color display
+    spi,
+    cs_pin=ecs,
+    dc_pin=dc,
+    sramcs_pin=srcs,
+    rst_pin=rst,
+    busy_pin=busy
+)
+'''
 
 display.rotation = 3
 
