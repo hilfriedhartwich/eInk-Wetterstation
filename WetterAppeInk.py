@@ -5,7 +5,7 @@ https://github.com/hilfriedhartwich/eInk-Wetterstation
 https://codeberg.org/hilfriedhartwich/eInk-Wetterstation
 
 GNU/GPL v3
-Stand: 25.05.2021
+Stand: 27.05.2021
 """
 
 import time
@@ -261,4 +261,4 @@ while True:
     display.display()        
         
     print('Warten, biis zur nächsten Runde')
-    time.sleep(200) # Zeit in Sekunden bis zur nächsten Aktualisierung
+    time.sleep(500) # Zeit in Sekunden bis zur nächsten Aktualisierung
