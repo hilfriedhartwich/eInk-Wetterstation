@@ -48,6 +48,13 @@ Jetzt müsste das Skript automatisch laufen. Falls es nicht funktioniert, einfac
 
 Das Skript aktualisiert die Anzeige nach knapp drei Minuten. Das kann aber in der letzten Zeile des Quelltextes angepasst werden.
 
+# Aufsteller
+Wem das Display so ganz nackig nicht gefällt, der kann sich natürlich auch ein Gehäuse oder einen Ständer basteln. Eine einfache Vorlage für den 3D-Drucker gibt es zum Beispiel [hier](https://www.thingiverse.com/thing:1344095).
+
+Mit etwas Bastelei könnte das dann am Ende z.B. so aussehen:
+
+![ImStaender](imstaender.jpeg)
+
 # Sonstiges
 Dieses Script basiert auf den Projekten [Raspberry Pi E-Ink Weather Station using Python](https://learn.adafruit.com/raspberry-pi-e-ink-weather-station-using-python) von [M. LeBlanc-Williams](https://learn.adafruit.com/users/MakerMelissa) und [Adafruit 2.13" Monochrome E-Ink Bonnet for Raspberry Pi](https://learn.adafruit.com/2-13-in-e-ink-bonnet) von [Kattni Rembor](https://learn.adafruit.com/users/kattni) sowie auf dem BeispielCode aus dem Repository [Adafruit_CircuitPython_EPD](https://github.com/adafruit/Adafruit_CircuitPython_EPD) von Adafruit.
 
@@ -62,8 +69,6 @@ Wer ein anderes eInk-Display verwendet, findet im Quelltext bereits die passende
 Zum Schluss hier noch ein Bild von der Seite, wie das dann am Ende aussehen könnte:
 
 ![Seitenansicht](seitenansicht.jpg) 
-
-Wem das nicht gefällt, der kann sich natürlich ein Gehäuse oder einen Ständer basteln. Einfacher Vorlagen für den 3D-Drucker gibt es zum Beispiel [hier](https://www.thingiverse.com/thing:1344095) oder [hier](https://www.thingiverse.com/thing:3538700).
 
 Sie finden dieses Repository übrigens sowohl auf [GitHub](https://github.com/hilfriedhartwich/eInk-Wetterstation) als auch auf [Codeberg](https://codeberg.org/hilfriedhartwich/eInk-Wetterstation).
 
