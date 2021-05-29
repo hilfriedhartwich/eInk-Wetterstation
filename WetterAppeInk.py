@@ -5,7 +5,7 @@ https://github.com/hilfriedhartwich/eInk-Wetterstation
 https://codeberg.org/hilfriedhartwich/eInk-Wetterstation
 
 GNU/GPL v3
-Stand: 27.05.2021
+Stand: 30.05.2021
 """
 
 import time
@@ -137,7 +137,7 @@ def wetter():
 
     # Ausgabe Heute
     datum = datetime.now().strftime('%d.%m.%Y')
-    statuszeile = f'es ist {zeitinworten(time.time())} am {datum}'
+    statuszeile = f'Stand: {zeitinworten(time.time())}, {datum}'
     
 
     #MiniMax Zukunft
@@ -250,15 +250,23 @@ display = Adafruit_IL0373(
 display.rotation = 3
 
 while True:
-    # clear the buffer
-    print("Clear buffer")
-    display.fill(Adafruit_EPD.WHITE)
-    display.pixel(10, 100, Adafruit_EPD.BLACK)
-
-    wettervorhersage = wetter()
-    print("Draw text")
-    display.text(f'{wettervorhersage}', 5, 5, Adafruit_EPD.BLACK)
-    display.display()        
+    # Nachtschlaf um das Display zu schonen
+    stundealszahl = int(time.strftime("%H", time.localtime(time.time())))
+    if stundealszahl < 6 or stundealszahl > 22:
+        print('Nachtmodus...')
+        time.sleep(1000)
         
-    print('Warten, biis zur nächsten Runde')
-    time.sleep(500) # Zeit in Sekunden bis zur nächsten Aktualisierung
+    else:
+        # clear the buffer
+        print("Clear buffer")
+        display.fill(Adafruit_EPD.WHITE)
+        display.pixel(10, 100, Adafruit_EPD.BLACK)
+
+        wettervorhersage = wetter()
+        print("Draw text")
+        display.text(f'{wettervorhersage}', 5, 5, Adafruit_EPD.BLACK)
+        display.display()        
+        
+        print('Warten, bis zur nächsten Runde')
+        time.sleep(3000) # 50 Minuten in Sekunden bis zur nächsten Aktualisierung
+
