@@ -189,7 +189,7 @@ def wetter():
 
     # Ausgabe
     vorhersage_weit = f'{zeitraum} tage: {mintemp}C bis {maxtemp}C, max. {maxwind}km/h'
-    tageslicht = f'hell von {zeitinworten(sunrise)} bis {zeitinworten(sunset)}'
+    tageslicht = f'tag: {zeitinworten(sunrise)} - {zeitinworten(sunset)}'
 
     wettervorhersage = f'{statuszeile}\n\n{vorhersage_header}\n{vorhersage}\n{vorhersage_weit}\n{tageslicht}'
     return wettervorhersage
